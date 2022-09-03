@@ -40,7 +40,7 @@ class _PlansState extends State<Plans> {
           ),
           const SizedBox(),
           ListView.separated(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             itemCount: 8,
             itemBuilder: (context, index) {
@@ -63,7 +63,7 @@ class _PlansState extends State<Plans> {
               );
             },
             separatorBuilder: (BuildContext context, int index) {
-              return Divider();
+              return const Divider();
             },
           )
         ],
