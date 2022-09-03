@@ -13,7 +13,11 @@ class _PlansState extends State<Plans> {
     'assets/images/plan_1_front.png',
     'assets/images/plan_1_back.png',
     'assets/images/plan_2_front.png',
-    'assets/images/plan_2_back.png'
+    'assets/images/plan_2_back.png',
+    'assets/images/plan_3_front.png',
+    'assets/images/plan_3_back.png',
+    'assets/images/plan_4_front.png',
+    'assets/images/plan_4_back.png'
   ];
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,7 @@ class _PlansState extends State<Plans> {
           ListView.separated(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
-            itemCount: 4,
+            itemCount: 8,
             itemBuilder: (context, index) {
               return InteractiveViewer(
                 child: SizedBox(

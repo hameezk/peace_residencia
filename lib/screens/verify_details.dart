@@ -32,7 +32,6 @@ class _VerifyDetailsState extends State<VerifyDetails> {
       //   backgroundColor: Colors.transparent,
       //   leading: BackButton(color: AppColors.lightBlueColor),
       // ),
-      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
           SizedBox(
@@ -43,76 +42,86 @@ class _VerifyDetailsState extends State<VerifyDetails> {
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(
-            width: size.width,
-            height: size.height,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/logo.png",
-                    height: 200,
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Text(
-                    'Verify File Details',
-                    style: GoogleFonts.cairo(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white54,
+          Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    width: size.width,
+                    height: size.height,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/images/logo.png",
+                              height: 200,
+                            ),
+                            const SizedBox(
+                              height: 50,
+                            ),
+                            Text(
+                              'Verify File Details',
+                              style: GoogleFonts.cairo(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white54,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextField(
+                              textAlignVertical: TextAlignVertical.center,
+                              controller: fileNumController,
+                              style: GoogleFonts.cairo(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                              textInputAction: TextInputAction.done,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 18),
+                                labelText: 'File Number',
+                                labelStyle: GoogleFonts.cairo(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                fillColor: Colors.white54,
+                                filled: true,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.black38, width: 0.3),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                _searchDetails(
+                                  context,
+                                  fileNumController.text.trim(),
+                                );
+                              },
+                              child: const Text('Search Details'),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextField(
-                    textAlignVertical: TextAlignVertical.center,
-                    controller: fileNumController,
-                    style: GoogleFonts.cairo(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                    textInputAction: TextInputAction.done,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 18),
-                      labelText: 'File Number',
-                      labelStyle: GoogleFonts.cairo(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      fillColor: Colors.white54,
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide:
-                            const BorderSide(color: Colors.black38, width: 0.3),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _searchDetails(
-                        context,
-                        fileNumController.text.trim(),
-                      );
-                    },
-                    child: const Text('Search Details'),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
@@ -129,22 +138,23 @@ class _VerifyDetailsState extends State<VerifyDetails> {
         print("location latitude: $latitude");
       }
 
-      // position = Position(
-      //   longitude: _locationData!.longitude!,
-      //   latitude: _locationData!.latitude!,
-      //   timestamp: DateTime.now(),
-      //   accuracy: _locationData!.accuracy!,
-      //   altitude: _locationData!.altitude!,
-      //   heading: _locationData!.heading!,
-      //   speed: _locationData!.speed!,
-      //   speedAccuracy: _locationData!.speedAccuracy!,
-      // );
+      position = Position(
+        longitude: _locationData!.longitude!,
+        latitude: _locationData!.latitude!,
+        timestamp: DateTime.now(),
+        accuracy: _locationData!.accuracy!,
+        altitude: _locationData!.altitude!,
+        heading: _locationData!.heading!,
+        speed: _locationData!.speed!,
+        speedAccuracy: _locationData!.speedAccuracy!,
+      );
 
-      // await getAddressFromLatLong(position!);
-      // print("location: $location");
+      await getAddressFromLatLong(position!);
+      print("location: $location");
+      print("city: $city");
     });
 
-    await getDetails(id);
+    await getDetails(id, context);
   }
 
   void _showLoadingDialouge(context) {
@@ -175,7 +185,7 @@ class _VerifyDetailsState extends State<VerifyDetails> {
     );
   }
 
-  Future<void> getDetails(String id) async {
+  Future<void> getDetails(String id, context) async {
     Map formData = {"Query": id};
     var body = jsonEncode(formData);
     try {
@@ -267,21 +277,25 @@ class _VerifyDetailsState extends State<VerifyDetails> {
             child: Stack(
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.6,
                   width: MediaQuery.of(context).size.width * 0.8,
                   color: Colors.white,
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                // SizedBox(
+                //   height: MediaQuery.of(context).size.height * 0.6,
+                //   width: MediaQuery.of(context).size.width * 0.8,
+                //   child: Image.asset(
+                //     'assets/images/bg2.png',
+                //     fit: BoxFit.fill,
+                //   ),
+                // ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.6,
                   width: MediaQuery.of(context).size.width * 0.8,
-                  child: Image.asset(
-                    'assets/images/bg2.png',
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  width: MediaQuery.of(context).size.width * 0.8,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/images/logo.png'),
+                          opacity: 0.1)),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: Column(
@@ -430,14 +444,14 @@ class _VerifyDetailsState extends State<VerifyDetails> {
     );
   }
 
-  // Future<void> getAddressFromLatLong(Position position) async {
-  //   List<geo.Placemark> placemarks = await geo.placemarkFromCoordinates(
-  //       position.latitude, position.longitude);
-  //   print(placemarks);
-  //   geo.Placemark place = placemarks[0];
-  //   location =
-  //       '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-  //   city = '${place.locality}';
-  //   setState(() {});
-  // }
+  Future<void> getAddressFromLatLong(Position position) async {
+    List<geo.Placemark> placemarks = await geo.placemarkFromCoordinates(
+        position.latitude, position.longitude);
+    print(placemarks);
+    geo.Placemark place = placemarks[0];
+    location =
+        '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+    city = '${place.locality}';
+    setState(() {});
+  }
 }
